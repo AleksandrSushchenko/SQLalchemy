@@ -9,6 +9,7 @@ class Publisher(Base):
     name = sq.Column(sq.String(length=40), nullable=False)
     name2 = sq.Column(sq.String(length=40), nullable=False)
 
+
 def create_tabeles(engine):
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
