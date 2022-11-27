@@ -97,6 +97,7 @@ session.add(book_3)
 session.add(book_4)
 session.commit()
 
+
 shop_1 = Shop(1, 'Буквоед')
 shop_2 = Shop(2, 'Книги и Книжечки')
 
