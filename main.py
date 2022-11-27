@@ -1,9 +1,9 @@
-import sqlalchemy
 from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Date
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
+
 
 class Publisher(Base):
     __tablename__ = 'publisher'
@@ -17,6 +17,7 @@ class Publisher(Base):
     def __repr__(self):
         return f'({self.id_publ}) {self.name}'
 
+
 class Book(Base):
     __tablename__ = 'book'
     id_book = Column('id_book', Integer, primary_key=True)
@@ -28,6 +29,7 @@ class Book(Base):
         self.title = title
         self.id_publ = id_publ
 
+
 class Shop(Base):
     __tablename__ = 'shop'
     id_shop = Column('id_shop', Integer, primary_key=True)
@@ -36,6 +38,7 @@ class Shop(Base):
     def __init__(self, id_shop, name):
         self.id_shop = id_shop
         self.name = name
+
 
 class Stock(Base):
     __tablename__ = 'stock'
@@ -50,15 +53,18 @@ class Stock(Base):
         self.id_shop = id_shop
         self.count = count
 
+
 class Sale(Base):
     __tablename__ = 'sale'
     id_price = Column('id_price', Integer, primary_key=True)
+    price = Column('price', Integer)
     date_sale = Column('date_sale', Date)
     id_stock = Column('id_stock', Integer, ForeignKey('stock.id_stock'))
     count = Column('count', Integer)
 
-    def __init__(self, id_price, date_sale, id_stock, count):
+    def __init__(self, id_price, price, date_sale, id_stock, count):
         self.id_price = id_price
+        self.price = price
         self.date_sale = date_sale
         self.id_stock = id_stock
         self.count = count
@@ -71,19 +77,56 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-publ_1 = Publisher(4,'Пушкин')
-publ_2 = Publisher(5,'Чехов')
-publ_3 = Publisher(6, 'Толстой')
+publ_1 = Publisher(1,'Пушкин')
+publ_2 = Publisher(2,'Чехов')
+publ_3 = Publisher(3, 'Толстой')
 
 session.add(publ_1)
 session.add(publ_2)
 session.add(publ_3)
 session.commit()
 
-results = session.query(Publisher).all()
-for r in results:
-    print(r)
+book_1 = Book(1, 'Капитанская дочь', 1)
+book_2 = Book(2, 'Руслан и Людмида', 1)
+book_3 = Book(3, 'Война и Мир', 3)
+book_4 = Book(4, 'Вишневый сад', 2)
 
+session.add(book_1)
+session.add(book_2)
+session.add(book_3)
+session.add(book_4)
+session.commit()
 
+shop_1 = Shop(1, 'Буквоед')
+shop_2 = Shop(2, 'Книги и Книжечки')
+
+session.add(shop_1)
+session.add(shop_2)
+
+session.commit()
+
+stock_1 = Stock(1, 1, 1, 1)
+stock_2 = Stock(2, 2, 1, 1)
+stock_3 = Stock(3, 3, 2, 1)
+stock_4 = Stock(4, 4, 2, 1)
+
+session.add(stock_1)
+session.add(stock_2)
+session.add(stock_3)
+session.add(stock_4)
+
+session.commit()
+
+sale_1 = Sale(1, 300, '11.09.2021', 1, 1)
+sale_2 = Sale(2, 200, '11.09.2021', 2, 1)
+sale_3 = Sale(3, 100, '11.09.2021', 3, 1)
+sale_4 = Sale(4, 150, '11.09.2021', 4, 1)
+
+session.add(sale_1)
+session.add(sale_2)
+session.add(sale_3)
+session.add(sale_4)
+
+session.commit()
 
 session.close()
